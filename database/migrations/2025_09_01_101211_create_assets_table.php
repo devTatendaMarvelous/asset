@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('assets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('type'); // e.g. laptop, tablet
+            $table->foreignId('type_id')->references('id')->on('asset_types'); // e.g. laptop, tablet
             $table->string('brand');
             $table->string('serial_number')->unique();
             $table->string('description')->nullable();
