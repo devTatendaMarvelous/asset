@@ -59,8 +59,10 @@ class AssetController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Asset $asset)
+    public function edit($id)
     {
+        $asset = Asset::findOrFail($id);
+
         $types = AssetType::all();
        return view('assets.edit', compact('asset','types'));
     }
@@ -68,9 +70,14 @@ class AssetController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAssetRequest $request, Asset $asset)
+    public function update(UpdateAssetRequest $request, $id)
     {
-        //
+        $asset = Asset::findOrFail($id);
+        $validated = $request->validated();
+        $asset->update($validated);
+        toast('Asset updated successfully.', 'success');
+        return redirect()->route('gadgets.index');
+
     }
 
     public function downloadQr(Asset $asset)

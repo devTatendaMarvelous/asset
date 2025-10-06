@@ -14,6 +14,7 @@
                             <th>Serial</th>
                             <th>Description</th>
                             <th>Status</th>
+                            <th>Created</th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -25,6 +26,7 @@
                                 <td>{{$asset->serial_number}}</td>
                                 <td>{{$asset->description}}</td>
                                 <td>{{$asset->status}}</td>
+                                <td>{{$asset->created_at}}</td>
                                 <td>
                                     <div class="dropdown d-inline-block">
                                         <button class="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">

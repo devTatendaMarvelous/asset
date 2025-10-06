@@ -22,7 +22,7 @@ COPY . /app
 
 # Set up the environment and update Composer dependencies
 RUN cp .env.example .env \
-    && composer update --no-dev --optimize-autoloader --ignore-platform-req=ext-gd
+    && composer update --optimize-autoloader --ignore-platform-req=ext-gd
 
 RUN php artisan setup
 
