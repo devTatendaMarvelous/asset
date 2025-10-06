@@ -1,4 +1,4 @@
-FROM php:8.1
+FROM php:8.2
 
 # Set environment variables to configure PHP memory limit
 ENV PHP_MEMORY_LIMIT=1G
