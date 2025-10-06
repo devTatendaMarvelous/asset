@@ -51,7 +51,7 @@ class UsersController extends Controller
             "name" => "required",
             "email" => "required|unique:users,email",
             "role" => "required",
-            'reg_number' => 'nullable|unique:users,reg_number',
+            'reg_number' => ['nullable', 'regex:/^[A-Za-z]\d{6,7}[A-Za-z]$/'],
             'phone' => 'nullable|unique:users,phone'
         ]);
 

@@ -7,7 +7,7 @@ ENV PHP_MEMORY_LIMIT=1G
 RUN apt-get update -y && apt-get install -y \
     openssl zip unzip git libonig-dev libzip-dev \
     libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
-    libpq-dev \
+    libpq-dev imagemagick librsvg2-bin \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd zip pdo_mysql pdo_pgsql
 

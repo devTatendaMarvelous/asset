@@ -14,10 +14,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        if (User::whereEmail('admin@asset.com')->doesntExist()) {
+        if (User::whereEmail('teekay@staff.msu.ac.zw')->doesntExist()) {
             User::create([
                 'name' => 'Admin',
-                'email' => 'admin@asset.com',
+                'email' => 'teekay@staff.msu.ac.zw',
                 'password' => Hash::make('password'),
             ]);
         }

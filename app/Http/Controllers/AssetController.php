@@ -82,10 +82,31 @@ class AssetController extends Controller
 
     public function downloadQr(Asset $asset)
     {
-        $filePath = storage_path('app/public/assets/qr_' . $asset->serial_number . '.png');
+    // Generate a random directory name
+    $time = random_int(10000, 99999);
+    $tempDir = storage_path('app/public/asset_card');
+    $tempDir2 = storage_path("app/public/asset_card{$time}");
 
-        if (file_exists($filePath)) {
-            return response()->download($filePath);
+    // Ensure both directories exist
+    if (!file_exists($tempDir)) {
+        mkdir($tempDir, 0755, true);
+    }
+    if (!file_exists($tempDir2)) {
+        mkdir($tempDir2, 0755, true);
+    }
+
+    // Write SVG file
+    $svgPath = $tempDir . '/' . $asset->serial_number . '.svg';
+    file_put_contents($svgPath, cardTemplate($asset));
+
+    // Prepare PNG path
+    $pngPath = $tempDir2 . '/' . pathinfo($asset->serial_number, PATHINFO_FILENAME) . '.png';
+
+    // Convert SVG to PNG using rsvg-convert
+    exec("rsvg-convert -f png -o " . escapeshellarg($pngPath) . " " . escapeshellarg($svgPath));
+    // Check if PNG file was created successfully
+        if (file_exists($pngPath)) {
+            return response()->download($pngPath);
         } else {
             toast('QR code not found.', 'error');
             return redirect()->back();

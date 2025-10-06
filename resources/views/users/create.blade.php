@@ -16,8 +16,16 @@
                             @if($is_student)
                                 <div class="col-md-6">
                                     <label for="validationDefault02" class="form-label">Registration Number</label>
-                                    <input type="text" class="form-control" id="validationDefault02" name="reg_number"
-                                           id="reg_number" required>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="reg_number"
+                                           name="reg_number"
+                                           placeholder="e.g. A123456B"
+                                           required>
+                                    <small id="reg_error" class="text-danger d-none">
+                                        Registration must start with a letter, followed by 6 or 7 digits, and end with a letter.
+                                    </small>
+
                                     @error('reg_number')
                                     <p class="text-danger">{{$message}}</p>
                                     @enderror
@@ -74,5 +82,41 @@
         </div> <!-- end col -->
     </div>
     <!-- end row -->
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('vehicleForm');
+            const regInput = document.getElementById('reg_number');
+            const errorMsg = document.getElementById('reg_error');
+            const pattern = /^[A-Za-z]\d{6,7}[A-Za-z]$/;
+
+            function validateReg() {
+                const value = regInput.value.trim();
+                if (pattern.test(value)) {
+                    regInput.classList.remove('is-invalid');
+                    regInput.classList.add('is-valid');
+                    errorMsg.classList.add('d-none');
+                    return true;
+                } else {
+                    regInput.classList.add('is-invalid');
+                    regInput.classList.remove('is-valid');
+                    errorMsg.classList.remove('d-none');
+                    return false;
+                }
+            }
+
+            // Real-time validation
+            regInput.addEventListener('input', validateReg);
+
+            // Form submission validation
+            form.addEventListener('submit', function (event) {
+                if (!validateReg()) {
+                    event.preventDefault(); // Prevent submission
+                    regInput.focus();
+                }
+            });
+        });
+    </script>
 </x-master>
 
