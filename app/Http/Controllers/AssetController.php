@@ -8,6 +8,8 @@ use App\Models\Asset;
 use App\Models\AssetType;
 use App\Models\User;
 use App\Traits\Core;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AssetController extends Controller
 {
@@ -16,9 +18,13 @@ class AssetController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $assets = Asset::with('user', 'type')->paginate(10);
+        $assets = Asset::with('user', 'type')
+            ->when($request->filled('type')&&$request->type==='blacklisted', function ($query) use ($request) {
+                $query->whereHas('latestBlacklist');
+            })
+            ->paginate(10);
         return view('assets.index', compact('assets'));
     }
 
@@ -49,11 +55,38 @@ class AssetController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Asset $asset)
-    {$asset= $asset->first();
-        $asset->load('user','type');
+    public function show($id)
+    {
+        $asset = Asset::findOrFail($id);
+
+        $asset->load('user', 'type','logs','blacklists');
 
         return view('assets.show', compact('asset'));
+    }
+
+    public function blacklist(Request $request, $id)
+    {
+        if (!isset($request->type) || !isset($request->reason)) {
+            toast('Type and reason are required to blacklist an asset.', 'error');
+            return redirect()->back();
+        }
+        try {
+
+            DB::beginTransaction();
+            $asset=     Asset::findOrFail($id);
+            $asset->status = $request->type;
+            $asset->save();
+            $asset->blacklists()->create([
+                'reason' => $request->reason,
+            ]);
+            DB::commit();
+            toast('Asset blacklisted successfully.', 'success');
+            return redirect()->back();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            toast('Error blacklisting asset: ' . $exception->getMessage(), 'error');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -64,7 +97,7 @@ class AssetController extends Controller
         $asset = Asset::findOrFail($id);
 
         $types = AssetType::all();
-       return view('assets.edit', compact('asset','types'));
+        return view('assets.edit', compact('asset', 'types'));
     }
 
     /**
@@ -80,31 +113,32 @@ class AssetController extends Controller
 
     }
 
-    public function downloadQr(Asset $asset)
+    public function downloadQr($id)
     {
-    // Generate a random directory name
-    $time = random_int(10000, 99999);
-    $tempDir = storage_path('app/public/asset_card');
-    $tempDir2 = storage_path("app/public/asset_card{$time}");
+        $asset = Asset::findOrFail($id);
+        // Generate a random directory name
+        $time = random_int(10000, 99999);
+        $tempDir = storage_path('app/public/asset_card');
+        $tempDir2 = storage_path("app/public/asset_card{$time}");
 
-    // Ensure both directories exist
-    if (!file_exists($tempDir)) {
-        mkdir($tempDir, 0755, true);
-    }
-    if (!file_exists($tempDir2)) {
-        mkdir($tempDir2, 0755, true);
-    }
+        // Ensure both directories exist
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+        if (!file_exists($tempDir2)) {
+            mkdir($tempDir2, 0755, true);
+        }
 
-    // Write SVG file
-    $svgPath = $tempDir . '/' . $asset->serial_number . '.svg';
-    file_put_contents($svgPath, cardTemplate($asset));
+        // Write SVG file
+        $svgPath = $tempDir . '/' . $asset->serial_number . '.svg';
+        file_put_contents($svgPath, cardTemplate($asset));
 
-    // Prepare PNG path
-    $pngPath = $tempDir2 . '/' . pathinfo($asset->serial_number, PATHINFO_FILENAME) . '.png';
+        // Prepare PNG path
+        $pngPath = $tempDir2 . '/' . pathinfo($asset->serial_number, PATHINFO_FILENAME) . '.png';
 
-    // Convert SVG to PNG using rsvg-convert
-    exec("rsvg-convert -f png -o " . escapeshellarg($pngPath) . " " . escapeshellarg($svgPath));
-    // Check if PNG file was created successfully
+        // Convert SVG to PNG using rsvg-convert
+        exec("rsvg-convert -f png -o " . escapeshellarg($pngPath) . " " . escapeshellarg($svgPath));
+        // Check if PNG file was created successfully
         if (file_exists($pngPath)) {
             return response()->download($pngPath);
         } else {

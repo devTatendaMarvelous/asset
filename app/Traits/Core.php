@@ -140,13 +140,13 @@ trait Core
 
             'Access Settings',
 
-            //Agents Permissions
-            'Access Agents',
-            'View Agents',
-            'Edit Agents',
-            'Delete Agents',
-            'Add Agents',
-            'Manage Agents',
+            //Roles Permissions
+            'Access Roles',
+            'View Roles',
+            'Edit Roles',
+            'Delete Roles',
+            'Add Roles',
+            'Manage Roles',
 
 
         ];

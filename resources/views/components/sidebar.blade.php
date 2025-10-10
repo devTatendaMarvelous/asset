@@ -73,6 +73,9 @@
                             <li class="nav-item">
                                 <a href="{{route('gadgets.index')}}" class="nav-link" >View</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{route('gadgets.index',['type'=>'blacklisted'])}}" class="nav-link" >Blacklisted</a>
+                            </li>
 
                         </ul>
                     </div>
@@ -86,12 +89,11 @@
                             <div class="collapse menu-dropdown" id="users">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{route('users.index')}}" class="nav-link" >View</a>
+                                        <a href="{{route('users.create')}}" class="nav-link" >Add</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#userPerformanceReportModal" >Performance Report</a>
+                                        <a href="{{route('users.index')}}" class="nav-link" >View</a>
                                     </li>
-
                                 </ul>
                             </div>
                         </li>

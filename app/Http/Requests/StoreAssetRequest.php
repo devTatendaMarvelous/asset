@@ -26,7 +26,7 @@ class StoreAssetRequest extends FormRequest
             'description' => 'nullable|string',
             'serial_number' => 'required|unique:assets,serial_number',
             'type_id' => 'required|exists:asset_types,id',
-            'status' => 'nullable|in:ASSIGNED,RESERVED,LOST,DAMAGED,RETIRED,DISPOSED',
+            'status' => 'nullable|in:ASSIGNED,STOLEN,LOST',
             'user_id' => 'required|exists:users,id'
         ];
     }

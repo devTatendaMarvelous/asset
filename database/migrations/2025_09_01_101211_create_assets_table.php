@@ -20,11 +20,8 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->enum('status', [
                 'ASSIGNED',
-                'RESERVED',
+                'STOLEN',
                 'LOST',
-                'DAMAGED',
-                'RETIRED',
-                'DISPOSED',
             ])->default('ASSIGNED');
             $table->timestamps();
         });

@@ -13,6 +13,7 @@
         "laravel/ui": "^4.6",
         "endroid/qr-code": "^6.0",
         "spatie/laravel-permission": "^6.21",
+        "tymon/jwt-auth": "^2.1",
         "realrashid/sweet-alert": "^7.1"
     },
     "require-dev": {
@@ -29,7 +30,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        },"files": ["app/helper.php"]
+        },"files": ["app/helper.php","app/Helpers/app.php","app/Helpers/api.php","app/Helpers/responseHandlers.php"]
     },
     "autoload-dev": {
         "psr-4": {

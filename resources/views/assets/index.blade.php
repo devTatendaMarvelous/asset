@@ -25,7 +25,17 @@
                                 <td>{{$asset->brand}}</td>
                                 <td>{{$asset->serial_number}}</td>
                                 <td>{{$asset->description}}</td>
-                                <td>{{$asset->status}}</td>
+                            <td >
+                                <p class="
+                                @if($asset->status === 'ASSIGNED') bg-success text-white
+                                @elseif($asset->status === 'LOST') bg-warning text-dark
+                                @elseif($asset->status === 'STOLEN') bg-danger text-white
+                                @endif
+                                p-1 rounded text-center
+                            ">
+                                {{$asset->status}}
+                                </p>
+                            </td>
                                 <td>{{$asset->created_at}}</td>
                                 <td>
                                     <div class="dropdown d-inline-block">
