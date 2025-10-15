@@ -16,8 +16,11 @@ class AssetController extends Controller
             return errorValidationResponseHandler('Invalid asset code');
         }
         $asset = Asset::with('user','type')->whereId( $code[0])->whereSerialNumber($code[1])->first();
-      return successResponseHandler('Asset!!',$asset);
+        if ($asset){
 
+            return successResponseHandler('Asset!!',$asset);
+        }
+return notFoundResponseHandler('Asset not exist');
     }
 
     public function cloak(Request $request)
