@@ -15,7 +15,7 @@ class AssetController extends Controller
         if(!isset($code[0] )|| !isset($code[1])){
             return errorValidationResponseHandler('Invalid asset code');
         }
-        $asset = Asset::with('user','type','logs','latestBlacklist')->whereId( $code[0])->whereSerialNumber($code[1])->first();
+        $asset = Asset::with('user','type')->whereId( $code[0])->whereSerialNumber($code[1])->first();
       return successResponseHandler('Asset!!',$asset);
 
     }
