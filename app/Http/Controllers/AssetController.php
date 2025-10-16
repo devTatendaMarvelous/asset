@@ -24,6 +24,9 @@ class AssetController extends Controller
             ->when($request->filled('type')&&$request->type==='blacklisted', function ($query) use ($request) {
                 $query->whereHas('latestBlacklist');
             })
+            ->when($request->filled('type')&&$request->type==='deregistered', function ($query) use ($request) {
+                $query->where('status','DEREGISTERED');
+            })
             ->paginate(10);
         return view('assets.index', compact('assets'));
     }
@@ -39,6 +42,9 @@ class AssetController extends Controller
         $types = AssetType::all();
         return view('assets.create', compact('students', 'types'));
     }
+
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -145,6 +151,13 @@ class AssetController extends Controller
             toast('QR code not found.', 'error');
             return redirect()->back();
         }
+    }
+
+    public function deregister($id){
+        Asset::find($id)->update(['status'=>'DEREGISTERED']);
+        toast('Asset deregistered successfully.', 'success');
+        return redirect()->back();
+
     }
 
 

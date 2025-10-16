@@ -22,9 +22,10 @@
                     <span class="ms-auto badge @if($asset->status === 'ASSIGNED') bg-success text-white
                                 @elseif($asset->status === 'LOST') bg-warning text-dark
                                 @elseif($asset->status === 'STOLEN') bg-danger text-white
+                                @elseif($asset->status === 'DEREGISTERED') bg-dark text-white
                                 @endif rounded-pill px-3 py-2 shadow-sm">{{$asset->status}}</span>
                 </div>
-
+                @if($asset->status === 'ASSIGNED')
                 <!-- Download Button -->
                 <div class="mt-3 d-flex justify-content-end">
                     <a href="{{route('assets.qr.download',[$asset->id])}}" class="btn btn-light text-primary d-flex align-items-center gap-2">
@@ -32,7 +33,7 @@
                         <span>Download Asset Card</span>
                     </a>
                 </div>
-                @if($asset->status === 'ASSIGNED')
+
                 <!-- Download Button -->
                 <div class="mt-3 d-flex justify-content-end">
                     <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#parentsFilterModal">

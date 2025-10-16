@@ -27,7 +27,7 @@ Route::post('users/{user}/password', [UsersController::class, 'passwordChange'])
 
 Route::controller(AssetController::class)->group(function () {
     Route::get('/assets/{id}/download',[AssetController::class,'downloadQr'])->name('assets.qr.download');
-
+Route::get('/assets/{id}/deregister',[AssetController::class,'deregister'])->name('assets.deregister');
     Route::post('/assets/{id}/blacklist',[AssetController::class,'blacklist'])->name('assets.blacklist');
 
 });

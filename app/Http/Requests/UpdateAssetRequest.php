@@ -24,7 +24,7 @@ class UpdateAssetRequest extends FormRequest
         return  [
         'brand' => 'required|string|max:255',
         'description' => 'nullable|string',
-        'serial_number' => 'required',
+        'serial_number' => 'required|numeric',
         'type_id' => 'required|exists:asset_types,id',
         'status' => 'nullable|in:ASSIGNED,RESERVED,LOST,DAMAGED,RETIRED,DISPOSED',
         'user_id' => 'required|exists:users,id'

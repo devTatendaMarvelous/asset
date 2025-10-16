@@ -76,6 +76,9 @@
                             <li class="nav-item">
                                 <a href="{{route('gadgets.index',['type'=>'blacklisted'])}}" class="nav-link" >Blacklisted</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{route('gadgets.index',['type'=>'deregistered'])}}" class="nav-link" >Deregistered</a>
+                            </li>
 
                         </ul>
                     </div>
