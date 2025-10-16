@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('asset_id')->constrained('assets')->onDelete('cascade');
             $table->unsignedBigInteger('blacklist_id');
-            $table->string('blacklist_type');
             $table->text('notes')->nullable();
             $table->string('status')->default('PENDING');
             $table->timestamps();

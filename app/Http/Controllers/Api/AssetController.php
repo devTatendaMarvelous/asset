@@ -24,9 +24,33 @@ class AssetController extends Controller
         return notFoundResponseHandler('Asset not exist');
     }
 
-    public function reportFound(Request $request, )
+    public function reportFound(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'asset_id' => 'required|exists:assets,id',
+            'notes' => 'required|string',
+        ], [
+            'asset_id.required' => 'Asset is required',
+            'asset_id.exists' => 'Asset does not exist',
+            'blacklist_id.required' => 'Blacklist ID is required',
+            'blacklist_type.required' => 'Blacklist type is required',
+            'notes.required' => 'Provide details about the found asset',
+        ]);
 
+        if ($validator->fails()) {
+            return errorValidationResponseHandler('Validation Error', $validator->errors());
+        }
+        $asset = Asset::find($request->asset_id);
+        $blacklist = $asset->latestBlacklist;
+        $assetFound = $asset->founds()->create([
+            'blacklist_id' => $blacklist->id,
+            'blacklist_type' => $asset->status,
+            'notes' => $request->notes ?? null,
+            'status' => 'PENDING',
+        ]);
+        $asset->update(['status' => 'REPORTED_FOUND']);
+
+        return successResponseHandler('Asset found report submitted successfully', $assetFound);
     }
 
     public function cloak(Request $request)

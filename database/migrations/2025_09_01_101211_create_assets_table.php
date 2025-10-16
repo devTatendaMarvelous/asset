@@ -22,7 +22,8 @@ return new class extends Migration
                 'ASSIGNED',
                 'STOLEN',
                 'LOST',
-                'DEREGISTERED'
+                'DEREGISTERED',
+                'REPORTED_FOUND'
             ])->default('ASSIGNED');
             $table->timestamps();
         });

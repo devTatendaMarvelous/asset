@@ -103,34 +103,86 @@
                     </div>
                 </div>
 
-                    <div class="mt-4">
-                        <h3 class="d-flex align-items-center mb-3">
-                            <i class="bi bi-calendar-event text-primary me-2"></i>
-                            Blacklist Logs
-                        </h3>
-                        <div class="card bg-light">
-                            <div class="card-body p-0">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
+                <div class="mt-4">
+                    <h3 class="d-flex align-items-center mb-3">
+                        <i class="bi bi-calendar-event text-primary me-2"></i>
+                        Blacklist Logs
+                    </h3>
+                    <div class="card bg-light">
+                        <div class="card-body p-0">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Reason</th>
+                                    <th>Is Active</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($asset->blacklists as $blacklist)
                                     <tr>
-                                        <th>Reason</th>
-                                        <th>Is Active</th>
-                                        <th>Date</th>
+                                        <td>{{$blacklist->reason}}</td>
+                                        <td>{{$blacklist->active?'Yes':'No'}}</td>
+                                        <td>{{parseDate( $blacklist->created_at)}}</td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($asset->blacklists as $blacklist)
-                                        <tr>
-                                            <td>{{$blacklist->reason}}</td>
-                                            <td>{{$blacklist->active?'Yes':'No'}}</td>
-                                            <td>{{parseDate( $blacklist->created_at)}}</td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+                </div>
+
+     <div class="mt-4">
+         <h3 class="d-flex align-items-center mb-3">
+             <i class="bi bi-calendar-event text-primary me-2"></i>
+             Found Logs
+         </h3>
+         <div class="card bg-light">
+             <div class="card-body p-0">
+                 <table class="table table-bordered table-striped">
+                     <thead>
+                     <tr>
+                         <th>Blacklist Type</th>
+                         <th>Notes</th>
+                         <th>Status</th>
+                         <th>Date</th>
+                         <th>Action</th>
+                     </tr>
+                     </thead>
+                     <tbody>
+                     @foreach($asset->founds as $found)
+                         <tr>
+                             <td>{{$found->blacklist_type}}</td>
+                             <td>{{$found->notes ?? 'N/A'}}</td>
+                             <td>
+                                 <span class="badge
+                                     @if($found->status === 'PENDING') bg-warning text-dark
+                                     @elseif($found->status === 'APPROVED') bg-success
+                                     @elseif($found->status === 'REJECTED') bg-danger
+                                     @endif text-dark">
+                                     {{$found->status}}
+                                 </span>
+                             </td>
+                             <td>{{parseDate($found->created_at)}}</td>
+                             <td>
+                                 @if($found->status === 'PENDING')
+                                     <form action="{{route('assets.restore', [$found->id])}}" method="POST" class="d-inline">
+                                         @csrf
+                                         <button type="submit" class="btn btn-sm btn-primary">
+                                             <i class="bi bi-arrow-counterclockwise"></i> Retrieve
+                                         </button>
+                                     </form>
+                                 @else
+                                     <span class="text-muted">-</span>
+                                 @endif
+                             </td>
+                         </tr>
+                     @endforeach
+                     </tbody>
+                 </table>
+             </div>
+         </div>
+     </div>
 
 
             </div>

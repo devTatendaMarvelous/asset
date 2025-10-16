@@ -29,10 +29,14 @@ protected $fillable =  [
     public function blacklists()
     {
         return $this->hasMany(Blacklist::class);
-
     }
     public function latestBlacklist()
     {
         return $this->hasOne(Blacklist::class)->latestOfMany()->where('active',true);
+    }
+    public function founds()
+    {
+        return $this->hasMany(AssetFound::class);
+
     }
 }

@@ -65,11 +65,44 @@ class AssetController extends Controller
     {
         $asset = Asset::findOrFail($id);
 
-        $asset->load('user', 'type','logs','blacklists');
+        $asset->load('user', 'type','logs','blacklists','founds');
 
         return view('assets.show', compact('asset'));
     }
 
+public function restore($id)
+{
+    try {
+        DB::beginTransaction();
+
+        $assetFound = \App\Models\AssetFound::findOrFail($id);
+
+        // Update asset status to ASSIGNED
+        $asset = Asset::findOrFail($assetFound->asset_id);
+        $asset->status = 'ASSIGNED';
+        $asset->save();
+
+        // Deactivate the associated blacklist
+        $blacklist = $asset->latestBlacklist()->find($assetFound->blacklist_id);
+        if ($blacklist) {
+            $blacklist->active = false;
+            $blacklist->save();
+        }
+
+
+        // Update AssetFound status to RETRIEVED
+        $asset->founds()->update(['status' => 'RETRIEVED']);
+
+
+        DB::commit();
+        toast('Asset retrieved successfully.', 'success');
+        return redirect()->back();
+    } catch (\Exception $exception) {
+        DB::rollBack();
+        toast('Error retrieving asset: ' . $exception->getMessage(), 'error');
+        return redirect()->back();
+    }
+}
     public function blacklist(Request $request, $id)
     {
         if (!isset($request->type) || !isset($request->reason)) {
