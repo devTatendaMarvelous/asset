@@ -15,8 +15,6 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->string('status')->default('PENDING');
             $table->timestamps();
-
-            $table->index(['blacklist_id', 'blacklist_type']);
         });
     }
 
