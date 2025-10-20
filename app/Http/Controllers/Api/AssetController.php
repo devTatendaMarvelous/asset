@@ -44,7 +44,6 @@ class AssetController extends Controller
         $blacklist = $asset->latestBlacklist;
         $assetFound = $asset->founds()->create([
             'blacklist_id' => $blacklist->id,
-            'blacklist_type' => $asset->status,
             'notes' => $request->notes ?? null,
             'status' => 'PENDING',
         ]);
