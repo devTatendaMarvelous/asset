@@ -11,6 +11,7 @@
                         <tr>
                             <th>Student</th>
                             <th>Brand</th>
+                            <th>Type</th>
                             <th>Serial</th>
                             <th>Description</th>
                             <th>Status</th>
@@ -23,6 +24,7 @@
                             <tr>
                                 <td>{{$asset->user->name??'n/a'}}</td>
                                 <td>{{$asset->brand}}</td>
+                                <td>{{$asset->type->name}}</td>
                                 <td>{{$asset->serial_number}}</td>
                                 <td>{{$asset->description}}</td>
                                 <td>

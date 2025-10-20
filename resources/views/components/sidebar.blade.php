@@ -59,7 +59,22 @@
                         </ul>
                     </div>
                 </li>
-
+<li class="nav-item">
+    <a class="nav-link menu-link" href="#asset-types" data-bs-toggle="collapse"
+       role="button" aria-expanded="false" aria-controls="asset-types">
+        <i class="fas fa-tags"></i> <span>Asset Types</span>
+    </a>
+    <div class="collapse menu-dropdown" id="asset-types">
+        <ul class="nav nav-sm flex-column">
+            <li class="nav-item">
+                <a href="{{ route('asset-types.create') }}" class="nav-link">Add</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('asset-types.index') }}" class="nav-link">View</a>
+            </li>
+        </ul>
+    </div>
+</li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#assets" data-bs-toggle="collapse"
                        role="button" aria-expanded="false" aria-controls="assets">

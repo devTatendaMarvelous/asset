@@ -1,66 +1,61 @@
 <?php
 
-namespace App\Http\Controllers;
+     namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreAssetTypeRequest;
-use App\Http\Requests\UpdateAssetTypeRequest;
-use App\Models\AssetType;
+     use App\Http\Requests\AssetTypeRequest;
+     use App\Models\AssetType;
+     use Illuminate\Http\Request;
 
-class AssetTypeController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+     class AssetTypeController extends Controller
+     {
+         public function index()
+         {
+             $types = AssetType::orderBy('name')->get();
+             return view('asset_types.index', compact('types'));
+         }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+         public function create()
+         {
+             return view('asset_types.create');
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreAssetTypeRequest $request)
-    {
-        //
-    }
+         }
+         public function show(AssetType $assetType)
+         {
+             return view('asset_types.show', compact('assetType'));
+         }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(AssetType $assetType)
-    {
-        //
-    }
+         public function store(AssetTypeRequest $request)
+         {
+              AssetType::create($request->validated());
+             toast('Asset type created.', 'success');
+             return redirect()->route('asset-types.index')->with('success', 'Asset type created.');
+         }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(AssetType $assetType)
-    {
-        //
-    }
+         public function edit(AssetType $assetType){
+                return view('asset_types.edit', compact('assetType'));
+         }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateAssetTypeRequest $request, AssetType $assetType)
-    {
-        //
-    }
+         public function update(AssetTypeRequest $request, AssetType $assetType)
+         {
+             $assetType->update($request->validated());
+             return redirect()->route('asset-types.show', $assetType)->with('success', 'Asset type updated.');
+         }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(AssetType $assetType)
-    {
-        //
-    }
-}
+         public function destroy(AssetType $assetType)
+         {
+             $assetType->delete();
+             return redirect()->route('asset-types.index')->with('success', 'Asset type deleted.');
+         }
+
+         // optional: restore soft-deleted asset type
+         public function restore($id)
+         {
+             $type = AssetType::withTrashed()->findOrFail($id);
+             if ($type->trashed()) {
+                 $type->restore();
+                 return redirect()->route('asset-types.show', $type)->with('success', 'Asset type restored.');
+             }
+             return redirect()->route('asset-types.index')->with('error', 'Not deleted.');
+         }
+
+     }
