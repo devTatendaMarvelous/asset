@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\NotifyAssetOwnerOfFoundAsset;
 use App\Models\Asset;
 use App\Models\AssetLog;
 use Illuminate\Http\Request;
@@ -26,6 +27,7 @@ class AssetController extends Controller
 
     public function reportFound(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'asset_id' => 'required|exists:assets,id',
             'notes' => 'required|string',
@@ -46,8 +48,13 @@ class AssetController extends Controller
             'blacklist_id' => $blacklist->id,
             'notes' => $request->notes ?? null,
             'status' => 'PENDING',
+//            'found_by_user_id' => auth()->id(),
         ]);
+
         $asset->update(['status' => 'REPORTED_FOUND']);
+
+        // Dispatch notification job to inform asset owner
+        NotifyAssetOwnerOfFoundAsset::dispatch($assetFound->id);
 
         return successResponseHandler('Asset found report submitted successfully', $assetFound);
     }

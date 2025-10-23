@@ -48,12 +48,16 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            "name" => "required",
-            "email" => "required|unique:users,email",
+            "name" =>  ['required', "regex:/^[\p{L}' ]+$/u"],
             "role" => "required",
             'reg_number' => ['nullable', 'regex:/^[A-Za-z]\d{6,7}[A-Za-z]$/'],
             'phone' => 'nullable|unique:users,phone'
         ]);
+        if($request->is_student){
+            $data['email']= strtolower( $request->reg_number . '@students.msu.ac.zw');
+        }else{
+            $data['email']=strtolower(  str_replace(' ','.',$request->name) . '@staff.msu.ac.zw');
+        }
 
         $data['password'] = Hash::make('password');
         $user = User::create($data);

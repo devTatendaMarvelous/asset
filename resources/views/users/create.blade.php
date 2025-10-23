@@ -40,15 +40,6 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label for="validationDefault02" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="validationDefault02" name="email"
-                                       id="email" required>
-                                @error('email')
-                                <p class="text-danger">{{$message}}</p>
-                                @enderror
-                            </div>
-
-                            <div class="col-md-6">
                                 <label for="validationDefault02" class="form-label">Phone</label>
                                 <input type="text" class="form-control" id="validationDefault02" name="phone"
                                        id="phone">
